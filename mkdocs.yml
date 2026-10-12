@@ -1,0 +1,102 @@
+# Public documentation site. Build: uv run --group docs mkdocs build --strict
+# Only docs/public/ is published; docs/wiki, docs/decisions and docs/audits stay internal.
+site_name: Cogni Agent Starter
+# Published from the public, docs-only repository alxsay/Cogni-Agent-Starter-docs (this repo stays private).
+site_url: https://alxsay.github.io/Cogni-Agent-Starter-docs/
+site_description: >-
+  Infraestrutura reutilizável, em Python, para construir agentes de software com identidade,
+  permissões, budgets, aprovação humana durável, avaliação e auditoria.
+docs_dir: docs/public
+site_dir: site
+strict: true
+
+theme:
+  name: material
+  language: pt-BR
+  # System fonts: no request to Google Fonts from visitors' browsers.
+  font: false
+  icon:
+    logo: material/robot-outline
+  favicon: assets/favicon.svg
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Usar tema claro
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Usar tema escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Seguir o sistema
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search:
+      lang: [pt, en]
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  # The guide embeds the verified example files themselves (docs/public/guides/first-agent/).
+  - pymdownx.snippets:
+      base_path: [docs/public/guides/first-agent]
+      check_paths: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Visão geral: index.md
+  - Primeiros passos: getting-started.md
+  - Arquitetura:
+      - architecture/index.md
+      - Componentes: architecture/overview.md
+      - Ciclo de vida de uma execução: architecture/execution-lifecycle.md
+      - Aprovação humana e retomada: architecture/hitl.md
+  - Guias:
+      - Construindo seu primeiro agente: guides/first-agent.md
+      - Testes e avaliação: guides/testing-and-evaluation.md
+  - Segurança e limitações: security.md
+  - Operação e implantação: operations.md
+  - Referência:
+      - CLI: reference/cli.md
+      - API HTTP: reference/http-api.md
+      - Configuração: reference/configuration.md
+      - Decisões de arquitetura: reference/decisions.md
+  - Próximos passos: roadmap.md

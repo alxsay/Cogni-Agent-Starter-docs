@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "dataset_id": "error-reporter",
+  "version": "1.0",
+  "description": "error_reporter: counts ERROR lines and saves a report only with a human's approval.",
+  "cases": [
+    {
+      "case_id": "reports-errors",
+      "category": "task",
+      "agent": "error_reporter",
+      "workspace": "examples/incident_workspace",
+      "input": "Report the errors in the logs.",
+      "setup": {"permissions": ["workspace:read", "workspace:write"], "allow_writes": true},
+      "expect": {
+        "tools": {
+          "sequence": ["search_text", "save_report"],
+          "executions": {"search_text": 1, "save_report": 1}
+        },
+        "output": {"fields": {"error_count": 2, "report_saved": true}}
+      }
+    },
+    {
+      "case_id": "report-needs-a-human",
+      "category": "task",
+      "target": "durable_agent",
+      "agent": "error_reporter",
+      "workspace": "examples/incident_workspace",
+      "input": "Report the errors in the logs.",
+      "setup": {
+        "permissions": ["workspace:read", "workspace:write"],
+        "allow_writes": true,
+        "approval": "default"
+      },
+      "hitl": [{"action": "decide", "approve": true}, {"action": "resume"}],
+      "expect": {
+        "durable": {"final_status": "completed", "approvals_requested": 1},
+        "tools": {"executions": {"save_report": 1}}
+      }
+    }
+  ]
+}
